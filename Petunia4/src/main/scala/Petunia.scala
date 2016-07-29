@@ -24,9 +24,10 @@ object Petunia {
    * @param3 so luong tap train (vd: 0.7)
    */
   def main(args: Array[String]): Unit = {
+    val startTime = System.currentTimeMillis()
 
     //~~~~~~~~~~~ Spark ~~~~~~~~~~~
-    val conf = new SparkConf().setAppName("ISLab.Petunia")
+    val conf = new SparkConf().setAppName("ISLab.Petunia").setMaster("spark://xla1:7077")
     val sc = new SparkContext(conf)
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //~~~~~~~~~~~ Events ~~~~~~~~~~~
@@ -131,6 +132,9 @@ object Petunia {
     val numIterations = 100
     val model = SVMWithSGD.train(training, numIterations)
 
+    val endTrain = System.currentTimeMillis();
+    val durationTrain = (endTrain - startTime) / 1000;
+
     // Clear the default threshold.
     model.clearThreshold()
     //model.setThreshold(0.5)
@@ -141,8 +145,14 @@ object Petunia {
       (score, point.label)
     }
 
+    val endTest = System.currentTimeMillis();
+    val durationTest = (endTest - startTime) / 1000;
+
     val metrics = new BinaryClassificationMetrics(scoreAndLabels)
     //val auPR = metrics.areaUnderPR
+
+    println("Include training duration: " + durationTrain + " seconds")
+    println("Include testing duration: " + durationTest + " seconds")
 
     val precision = metrics.precisionByThreshold.collect.toMap[Double, Double]
     val recall = metrics.recallByThreshold.collect.toMap[Double, Double]

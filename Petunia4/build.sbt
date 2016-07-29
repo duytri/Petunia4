@@ -3,9 +3,9 @@ import Keys._
 import sbtassembly.AssemblyPlugin.autoImport._
 
 name := "Petunia4"
-version := "0.1-SNAPSHOT"
+version := "0.2-SNAPSHOT"
 organization := "uit.islab"
-scalaVersion := "2.11.8"
+scalaVersion := "2.10.6"
 
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % "1.5.1",
